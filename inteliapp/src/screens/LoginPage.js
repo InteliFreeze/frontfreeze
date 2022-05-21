@@ -1,0 +1,67 @@
+import * as React from 'react';
+
+import { Text, View, TextInput, Button } from 'react-native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export default function LoginPage({ navigation: { navigate } }) {
+    const verifyToken = async () => {
+        const tokenVerify = await AsyncStorage.getItem('token');
+        if (tokenVerify !== null || tokenVerify !== '') {
+            navigate('Main');
+        }
+    }
+    const [token, setToken ] = React.useState();
+    const changeTokenOnType = (newToken) => {
+        setToken(newToken);
+        console.log(newToken)
+    }
+    const changePage = async () => {
+        if (token !== null && token !== '') {
+            await AsyncStorage.setItem('token', token);
+            navigate('Main');
+        } else {
+            alert('Preencha o campo de token');
+        }
+    }
+
+    React.useEffect(() => {
+        verifyToken();
+    }, [])
+    return (
+        <View style={{ flex: 1, paddingTop: '50%', alignItems: 'center'}}>
+           <Text style={{fontSize: 32, color: "#ffffff", fontWeight:'bold' }}>Seja bem-vindo!</Text>
+           <Text style={{fontSize: 24, color: "#bdbdbd", fontWeight:'bold' }}>Digite o seu token:</Text>
+           <View style={{ flex: 1, justifyContent: 'center', marginTop: -60}}>
+               <TextInput
+               onChangeText={(text) => changeTokenOnType(text)}
+               style={{
+                    height: 60,
+                    width: 285,
+                    backgroundColor: '#B4C9FF',
+                    padding: 12,
+                    margin: 32,
+                    borderTopRightRadius: 32,
+                    borderTopLeftRadius: 64,
+                    borderBottomRightRadius: 64,
+                    borderBottomLeftRadius: 32,
+                    }}></TextInput>
+                <View 
+                style={{
+                   height: 60,
+                   width: 137,
+                   backgroundColor: '#00C113',
+                   padding: 12,
+                   marginLeft: 32,
+                   borderTopRightRadius: 32,
+                   borderTopLeftRadius: 64,
+                   borderBottomRightRadius: 64,
+                   borderBottomLeftRadius: 32,
+                }}>
+                    <Button onPress={changePage} title='Entrar' color='#00C113'></Button>
+                </View>
+        
+           </View>
+        </View>
+    );
+  }
