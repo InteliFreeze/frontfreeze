@@ -1,11 +1,12 @@
 import * as React from 'react';
+import axios from 'axios';
 
 import { Text, View, TextInput, Button } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginPage({ navigation: { navigate } }) {
-    const verifyToken = async () => {
+    const verifyToken = async () => {    
         const tokenVerify = await AsyncStorage.getItem('token');
         if (tokenVerify !== null || tokenVerify !== '') {
             navigate('Main');
@@ -14,15 +15,25 @@ export default function LoginPage({ navigation: { navigate } }) {
     const [token, setToken ] = React.useState();
     const changeTokenOnType = (newToken) => {
         setToken(newToken);
-        console.log(newToken)
     }
     const changePage = async () => {
-        if (token !== null && token !== '') {
+        await axios.get(`http://192.168.0.101:3000/api/users/${token}/`).then(async res => {
+          if (res.data.data.User[0] !== undefined) {
             await AsyncStorage.setItem('token', token);
             navigate('Main');
-        } else {
-            alert('Preencha o campo de token');
-        }
+          } else {
+            alert('Token inválido');
+          }
+        }).catch(err => {
+          navigate('Login');
+          alert('Erro de conexão!');
+        });
+        // if (token !== null && token !== '') {
+        //     await AsyncStorage.setItem('token', token);
+        //     navigate('Main');
+        // } else {
+        //     alert('Preencha o campo de token');
+        // }
     }
 
     React.useEffect(() => {
