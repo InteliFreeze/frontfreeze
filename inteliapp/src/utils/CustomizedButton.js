@@ -1,11 +1,11 @@
 import { Text, View, Button } from 'react-native';
 
-function CustomizedButton() {
+function CustomizedButton(props) {
     return (
       <View style={{
         height: 60,
         width: 137,
-        backgroundColor: '#00C113',
+        backgroundColor: `${props.color}`,
         padding: 12,
         marginLeft: 32,
         borderTopRightRadius: 32,
@@ -13,7 +13,7 @@ function CustomizedButton() {
         borderBottomRightRadius: 64,
         borderBottomLeftRadius: 32,
       }}>
-        <Button title='Entrar' color='#00C113'></Button>
+        <Button title='Entrar' color={props.color}></Button>
       </View>
         
     );
