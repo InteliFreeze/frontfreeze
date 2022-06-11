@@ -8,8 +8,7 @@ import axios from 'axios';
 function ItemBox(props) {
     const [rerender, setRerender] = React.useState('flex');
     function deleteItem (id) {
-        axios.delete(`http://192.168.0.101:3000/api/users/usertoken/${id}`).then(res => {
-            console.log(res)
+        axios.delete(`https://backfreeze.herokuapp.com/api/users/usertoken/${id}`).then(res => {
             setRerender('none')
         }).catch(err => {
             console.log(err)

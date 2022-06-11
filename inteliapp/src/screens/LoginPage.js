@@ -17,7 +17,7 @@ export default function LoginPage({ navigation: { navigate } }) {
         setToken(newToken);
     }
     const changePage = async () => {
-        await axios.get(`http://192.168.0.101:3000/api/users/${token}/`).then(async res => {
+        await axios.get(`https://backfreeze.herokuapp.com/api/users/${token}/`).then(async res => {
           if (res.data.data.User[0] !== undefined) {
             await AsyncStorage.setItem('token', token);
             navigate('Main');

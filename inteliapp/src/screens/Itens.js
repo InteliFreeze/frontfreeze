@@ -7,38 +7,22 @@ import ItemBox from '../utils/ItemBox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Itens() {
-  let value;
   const [itens, setItens] = React.useState([]);
-  const [token, setToken] = React.useState();
   const [count, setCount] = React.useState(0);
-  async function getToken () {
-    const t = await AsyncStorage.getItem('token');
-    console.log(t)
-    setToken(t)
-    console.log("token: " + token)
-    return t;
-  }
   async function getItens () {
-    console.log(token)
-    console.log(`http://192.168.0.101:3000/api/users/${token}/`)
-    await axios.get(`http://192.168.0.101:3000/api/users/${token}/`).then(res => {
-      value = res.data.data.User[0].items;
-
-      setItens(value)
+    const t = await AsyncStorage.getItem('token');
+    console.log(`https://backfreeze.herokuapp.com/api/users/${t}/`)
+    await axios.get(`https://backfreeze.herokuapp.com/api/users/${t}/`).then(res => {
+      setItens(res.data.data.User[0].items)
     })
     .catch(err => {
       console.log(err)
     })
   }
-  React.useEffect(() => {
-    setToken(getToken());
-    getItens();
-    
-  }, [])
+
   React.useEffect(() => {
     if (count < 4) {
-      setToken(getToken())
-      getItens()
+      getItens() 
       setCount(1)
   }
     
@@ -51,7 +35,7 @@ function Itens() {
           marginBottom: 93,
         }}>
         {
-          itens !== undefined ? itens.map(item => {return (<ItemBox _id={item._id} nome={item.nome} validade={item.validade} codigo={item.codigo}></ItemBox>)}) : null
+          itens !== undefined ? itens.map(item => {return (<ItemBox key={item._id} _id={item._id} nome={item.nome} validade={item.validade} codigo={item.codigo}></ItemBox>)}) : null
         }
         </ScrollView>
       </View>
