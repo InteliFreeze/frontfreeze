@@ -87,6 +87,42 @@ function ItemBox(props) {
             console.log(err)
         })
     }
+    
+    const [validade, setValidade] = React.useState(props.validade);
+
+    async function updateValidade (name) {
+        const t = await AsyncStorage.getItem('token');
+        setValidade(name);
+        let itens = [];
+        await axios.get(`https://backfreeze.herokuapp.com/api/users/${t}/`).then(res => {
+          itens = JSON.parse(JSON.stringify(res.data.data.User[0].items));
+        })
+        .catch(err => {
+          alert('Erro ao atualizar validade!');
+        })
+
+        itens.map(item => {
+            if (item._id === props._id) {
+                const data = validade.split('/')
+                console.log(validade)
+                item.validade = new Date(data[2], data[1] - 1, data[0]);
+            }
+        })
+
+        await axios.patch(`https://backfreeze.herokuapp.com/api/users/${t}/`, {
+            items: itens
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
+            
+        }).catch(err => {
+            alert('Erro ao atualizar validade!');
+            
+        })
+    }
+
 
     return (
         <View key={props._id}
@@ -143,7 +179,7 @@ function ItemBox(props) {
                 paddingLeft: 24
             }}>
                 <Text style={{ fontSize: 20, color: "#000345", fontWeight: 'bold' }}>Validade:</Text>
-                <Text style={{ fontSize: 16, color: "#282B65", fontWeight: 'bold', paddingLeft: 12, paddingRight: 64 }}>{format(new Date(props.validade), 'dd/MM/yyyy')}</Text>
+                <TextInput onChangeText={(input) => {setValidade(input)}} onBlur={() => updateValidade()} style={{ fontSize: 16, color: "#282B65", fontWeight: 'bold', paddingLeft: 12, paddingRight: 64 }}>{format(new Date(props.validade), 'dd/MM/yyyy')}</TextInput>
             </View>
             <View style={{
                 display: 'flex',
