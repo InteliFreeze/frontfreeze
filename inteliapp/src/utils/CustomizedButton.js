@@ -1,4 +1,4 @@
-import { Text, View, Button } from 'react-native';
+import { View, Button } from 'react-native';
 
 function CustomizedButton(props) {
     return (

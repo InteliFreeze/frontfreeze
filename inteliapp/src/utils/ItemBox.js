@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Text, View, TextInput, ProgressViewIOSComponent } from 'react-native';
-import { format } from 'date-fns';
+import { Text, View, Linking, Button } from 'react-native';
+import { format, max } from 'date-fns';
 import axios from 'axios';
 
 function ItemBox(props) {
@@ -14,6 +14,13 @@ function ItemBox(props) {
             console.log(err)
         })
     }
+
+    const onPress = async () => {
+        const url = `https://cosmos.bluesoft.com.br/produtos/${props.codigo}`;
+        await Linking.canOpenURL(url);
+        Linking.openURL(url);
+    };
+    
     return (
         <View key={props._id}
         style={{
@@ -70,6 +77,23 @@ function ItemBox(props) {
             }}>
                 <Text style={{ fontSize: 20, color: "#000345", fontWeight: 'bold' }}>Validade:</Text>
                 <Text style={{ fontSize: 16, color: "#282B65", fontWeight: 'bold', paddingLeft: 12, paddingRight: 64 }}>{format(new Date(props.validade), 'dd/MM/yyyy')}</Text>
+            </View>
+            <View style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                height: 'auto',
+                width: 'auto',
+                backgroundColor: '#000345',
+                padding: 12,
+                marginTop: 12,
+                borderTopRightRadius: 32,
+                borderTopLeftRadius: 64,
+                borderBottomRightRadius: 64,
+                borderBottomLeftRadius: 32,
+            }}>
+                <Button onPress={onPress} title='Fabricante' color='#000345'></Button>
+                <Ionicons name='link' color={"#ffffff"} size={18} />
             </View>
             
             
