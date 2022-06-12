@@ -1,8 +1,9 @@
 import * as React from 'react';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Text, View, Linking, Button } from 'react-native';
-import { format, max } from 'date-fns';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Text, View, Linking, Button, TextInput } from 'react-native';
+import { format } from 'date-fns';
 import axios from 'axios';
 
 function ItemBox(props) {
@@ -20,7 +21,73 @@ function ItemBox(props) {
         await Linking.canOpenURL(url);
         Linking.openURL(url);
     };
+
+    const [nome, setNome] = React.useState(props.nome);
+
+    async function updateNome (name) {
+        const t = await AsyncStorage.getItem('token');
+        setNome(name);
+        let itens = [];
+        await axios.get(`https://backfreeze.herokuapp.com/api/users/${t}/`).then(res => {
+          itens = JSON.parse(JSON.stringify(res.data.data.User[0].items));
+        })
+        .catch(err => {
+          alert('Erro ao atualizar nome!');
+        })
+
+        itens.map(item => {
+            if (item._id === props._id) {
+                item.nome = nome;
+            }
+        })
+
+        await axios.patch(`https://backfreeze.herokuapp.com/api/users/${t}/`, {
+            items: itens
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
+            console.log(res)
+        }).catch(err => {
+            alert('Erro ao atualizar nome!');
+            console.log(err)
+        })
+    }
     
+    const [codigo, setCodigo] = React.useState(props.codigo);
+
+    async function updateCodigo (name) {
+        const t = await AsyncStorage.getItem('token');
+        setCodigo(name);
+        let itens = [];
+        await axios.get(`https://backfreeze.herokuapp.com/api/users/${t}/`).then(res => {
+          itens = JSON.parse(JSON.stringify(res.data.data.User[0].items));
+        })
+        .catch(err => {
+          alert('Erro ao atualizar codigo!');
+        })
+
+        itens.map(item => {
+            if (item._id === props._id) {
+                item.codigo = codigo;
+            }
+        })
+
+        await axios.patch(`https://backfreeze.herokuapp.com/api/users/${t}/`, {
+            items: itens
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
+            console.log(res)
+        }).catch(err => {
+            alert('Erro ao atualizar codigo!');
+            console.log(err)
+        })
+    }
+
     return (
         <View key={props._id}
         style={{
@@ -48,7 +115,7 @@ function ItemBox(props) {
                 justifyContent: 'space-evenly',
                 alignItems: 'center'
             }}>
-                <Text style={{ fontSize: 20, color: "#494B7A", fontWeight: 'bold' }}>{props.codigo}</Text>
+                <TextInput onChangeText={(input) => {setCodigo(input)}} onBlur={() => updateCodigo()} style={{ fontSize: 20, color: "#494B7A", fontWeight: 'bold' }}>{props.codigo}</TextInput>
                 <Ionicons onPress={() => {deleteItem(props._id)}} name='close' color={"#494B7A"} size={24} />
 
             </View>
@@ -63,7 +130,7 @@ function ItemBox(props) {
                 paddingLeft: 24
             }}>
                 <Text style={{ fontSize: 20, color: "#000345", fontWeight: 'bold' }}>Nome:</Text>
-                <Text style={{ fontSize: 16, color: "#282B65", fontWeight: 'bold', paddingLeft: 12, paddingRight: 84 }}>{props.nome}</Text>
+                <TextInput onChangeText={(input) => {setNome(input)}} onBlur={() => updateNome()} style={{ fontSize: 16, color: "#282B65", fontWeight: 'bold', paddingLeft: 12, paddingRight: 84 }}>{props.nome}</TextInput>
             </View>
             <View
             style={{

@@ -39,7 +39,7 @@ function Itens({navigation: {navigate}}) {
         <Text style={{fontSize: 20, color: "#ffffff", fontWeight:'bold' }}>Itens</Text>
         <Text style={{fontSize: 16, color: "#BDBDBD", paddingTop: 7, paddingBottom:14 }}>Estes são os seus alimentos.</Text>
         <View style={{}}>
-          <Ionicons onPress={() => navigate('AddItens')} name='add' color={"#494B7A"} size={24} />
+          <Ionicons onPress={() => navigate('AddItens')} name='add' color={"#fff"} size={32} />
         </View>
         <ScrollView style={{
           marginBottom: 93,
