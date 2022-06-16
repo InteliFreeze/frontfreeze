@@ -12,7 +12,7 @@ function ItemBox(props) {
         axios.delete(`https://backfreeze.herokuapp.com/api/users/usertoken/${id}`).then(res => {
             setRerender('none')
         }).catch(err => {
-            console.log(err)
+            alert('Não foi possível deletar o item!')
         })
     }
 
@@ -48,10 +48,8 @@ function ItemBox(props) {
                 'Content-Type': 'application/json'
             }
         }).then(res => {
-            console.log(res)
         }).catch(err => {
             alert('Erro ao atualizar nome!');
-            console.log(err)
         })
     }
     
@@ -81,10 +79,8 @@ function ItemBox(props) {
                 'Content-Type': 'application/json'
             }
         }).then(res => {
-            console.log(res)
         }).catch(err => {
-            alert('Erro ao atualizar codigo!');
-            console.log(err)
+            alert('Erro ao atualizar codigo de barras!');
         })
     }
     
@@ -103,8 +99,7 @@ function ItemBox(props) {
 
         itens.map(item => {
             if (item._id === props._id) {
-                const data = validade.split('/')
-                console.log(validade)
+                const data = validade.split('/');
                 item.validade = new Date(data[2], data[1] - 1, data[0]);
             }
         })
@@ -128,7 +123,7 @@ function ItemBox(props) {
         <View key={props._id}
         style={{
             height: 'auto',
-            width: 285,
+            width: '100%',
             backgroundColor: '#B4C9FF',
             paddingBottom: 12,
             marginBottom: 12,

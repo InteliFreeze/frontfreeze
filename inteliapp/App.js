@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './src/Login';
 import Main from './src/Main';
 import AddItens from './src/AddItens';
+import Receitinha from './src/Receitinha';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,7 @@ export default function App() {
 
       <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />
       <Stack.Screen options={{ headerShown: false }} name="AddItens" component={AddItens} />
+      <Stack.Screen options={{ headerShown: false }} name="Receitinha" component={Receitinha} />
     </Stack.Navigator>
     </NavigationContainer>
   );

@@ -9,7 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function Itens({navigation: {navigate}}) {
   const [itens, setItens] = React.useState([]);
-
+  const [refreshing, setRefreshing] = React.useState(true);
   async function getItens () {
     const t = await AsyncStorage.getItem('token');
     console.log(`https://backfreeze.herokuapp.com/api/users/${t}/`)
@@ -28,7 +28,6 @@ function Itens({navigation: {navigate}}) {
     
   }, [])
 
-  const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
