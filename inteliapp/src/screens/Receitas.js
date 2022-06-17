@@ -8,14 +8,44 @@ import translate from 'translate-google-api';
 
 function Receitas({navigation: {navigate}}) {
     const [ receitas, setReceitas ] = React.useState([]);
+
+    const [ ingredientes, setIngredientes ] = React.useState();
+    const [ validades, setValidades ] = React.useState();
+
     const [refreshing, setRefreshing] = React.useState(true);
+
+    async function getIngredientes () {
+        await AsyncStorage.getItem('token').then(token => {
+            
+      });
+    }
 
     async function getReceitas() {
       const t = await AsyncStorage.getItem('token');
+
+      let ingredientes;
+      let nomes = [];
+      let validades = [];
+
+      await axios.get(`https://backfreeze.herokuapp.com/api/users/${t}/`).then(res => {
+        ingredientes = res.data.data.User[0].items;
+             
+        ingredientes.forEach(element => {
+          nomes.push(element.nome);
+          validades.push(element.validade);
+        });
+        
+      }).catch(err => {
+        alert("Não foi possível carregar as receitas!");
+      });
+      nomes = nomes.join(',')
+      validades = validades.join(',');
+      console.log(nomes)
+
       await axios.post(`https://backfreeze.herokuapp.com/api/receitas`, {
         
-        ingredientes: "presunto,queijo,sal,pão,margarina,requeijão,água,sopa de cebola,salsa,pimentão verde,água",
-        validades: "2022-04-30,2022-04-30,2022-05-10,2022-04-30"
+        ingredientes: nomes,
+        validades: validades,
         
       }, {
         headers: { 'Content-Type': 'application/json' }
@@ -55,6 +85,7 @@ function Receitas({navigation: {navigate}}) {
           {
           receitas !== undefined ? receitas.map(receita => {return (<ReceitaBox key={receita._id} nome={receita.nome} naGeladeiraPorcentagem={receita.porcentagemNaGeladeira} emVencimento={receita.itemsEmVencimento} navigate={navigate} _id={receita._id} itemsEmVencimentoNaGeladeira={receita.itemsEmVencimentoNaReceita} itemsFaltantes={receita.itemsFaltantes}></ReceitaBox>)}) : null
           }
+
 
         </ScrollView>
       </View>
