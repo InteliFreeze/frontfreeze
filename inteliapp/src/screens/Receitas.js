@@ -9,16 +9,7 @@ import translate from 'translate-google-api';
 function Receitas({navigation: {navigate}}) {
     const [ receitas, setReceitas ] = React.useState([]);
 
-    const [ ingredientes, setIngredientes ] = React.useState();
-    const [ validades, setValidades ] = React.useState();
-
     const [refreshing, setRefreshing] = React.useState(true);
-
-    async function getIngredientes () {
-        await AsyncStorage.getItem('token').then(token => {
-            
-      });
-    }
 
     async function getReceitas() {
       const t = await AsyncStorage.getItem('token');
@@ -38,9 +29,12 @@ function Receitas({navigation: {navigate}}) {
       }).catch(err => {
         alert("Não foi possível carregar as receitas!");
       });
+      nomes.forEach(element => {
+        element = element.toLowerCase();
+      });
       nomes = nomes.join(',')
+      
       validades = validades.join(',');
-      console.log(nomes)
 
       await axios.post(`https://backfreeze.herokuapp.com/api/receitas`, {
         

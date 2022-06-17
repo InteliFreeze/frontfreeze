@@ -37,7 +37,7 @@ function ReceitaBox(props) {
             justifyContent: 'center',
             alignItems: 'center',
         }}>
-            <Text style={{ textAlign: 'center', fontSize: 20, color: "#000345", fontWeight: 'bold' }}>{props.nome}</Text>
+            <Text style={{ width: '70%', textAlign: 'center', fontSize: 20, color: "#000345", fontWeight: 'bold' }}>{props.nome}</Text>
 
         <View style={{
             display: 'flex',
