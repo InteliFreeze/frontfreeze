@@ -45,6 +45,8 @@ function AddItens({navigation: {navigate}}) {
     return (
       <View style={{ flex: 1, paddingTop: 65, paddingRight: 45, paddingLeft:45, backgroundColor: '#000345'}}>
         <Ionicons onPress={() => navigate('Itens')} name='arrow-back' color={"#ffffff"} size={24} style={{ marginBottom: 24 }} />
+        <Ionicons onPress={() => navigate('Itens')} name='camera' color={"#ffffff"} size={24} style={{ marginBottom: 24 }} />
+
         <Text style={{fontSize: 20, color: "#ffffff", fontWeight:'bold' }}>Adicionar ingrediente</Text>
         <Text style={{fontSize: 16, color: "#BDBDBD", paddingTop: 7, paddingBottom:14 }}>Informe os dados.</Text>
         <Text style={{marginTop: 12, fontSize: 18, color: "#ffffff", fontWeight:'bold' }}>Nome do item:</Text>
