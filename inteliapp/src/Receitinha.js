@@ -6,7 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 function Receitinha({route}) {
-    const [receitaCompleta, setReceitaCompleta] = React.useState();
     const [ingredientes, setIngredientes] = React.useState([]);	
     const [directions, setDirections ] = React.useState([]);	
     const [refreshing, setRefreshing] = React.useState(true);
@@ -14,8 +13,6 @@ function Receitinha({route}) {
         await axios.post(`https://backfreeze.herokuapp.com/api/receitas/receita`, {
             id: route.params.props._id
         }).then(res => {
-            setReceitaCompleta(res.data.data.receita[0]);
-
             setIngredientes(((res.data.data.receita[0].ingredientes_medidas).split(',')));
             setDirections((res.data.data.receita[0].directions).replace(/"/g, '').replace(/\[/g, '').replace(/]/g, ''))
             setRefreshing(false);
@@ -35,6 +32,7 @@ function Receitinha({route}) {
 
     return (
       <View style={{ flex: 1, paddingTop: 65, paddingRight: 45, paddingLeft:45, backgroundColor: '#000345'}}>
+        <Ionicons onPress={() => route.params.props.navigate('Receitas')} name='arrow-back' color={"#ffffff"} size={24} style={{ marginBottom: 24 }} />
         <View style={{
           display: 'flex',
           flexDirection: 'row',

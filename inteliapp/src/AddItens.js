@@ -5,7 +5,7 @@ import { TextInput, Text, View, ScrollView, Button } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CalendarPicker from 'react-native-calendar-picker';
-import { set } from 'date-fns';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function AddItens({navigation: {navigate}}) {
     const [token, setToken ] = React.useState('');
@@ -44,9 +44,10 @@ function AddItens({navigation: {navigate}}) {
     }
     return (
       <View style={{ flex: 1, paddingTop: 65, paddingRight: 45, paddingLeft:45, backgroundColor: '#000345'}}>
+        <Ionicons onPress={() => navigate('Itens')} name='arrow-back' color={"#ffffff"} size={24} style={{ marginBottom: 24 }} />
         <Text style={{fontSize: 20, color: "#ffffff", fontWeight:'bold' }}>Adicionar ingrediente</Text>
         <Text style={{fontSize: 16, color: "#BDBDBD", paddingTop: 7, paddingBottom:14 }}>Informe os dados.</Text>
-        <Text style={{marginTop: 32, fontSize: 18, color: "#ffffff", fontWeight:'bold' }}>Nome do item:</Text>
+        <Text style={{marginTop: 12, fontSize: 18, color: "#ffffff", fontWeight:'bold' }}>Nome do item:</Text>
 
         <ScrollView style={{
           width: 'auto',
