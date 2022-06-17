@@ -21,11 +21,7 @@ function Receitinha({route}) {
     React.useEffect(() => {
         getReceita();
     }, [refreshing]);
-    async function navigateToCookbook () {
-        const url = receitaCompleta.link
-        await Linking.canOpenURL(url);
-        Linking.openURL(url);
-    }
+
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
       }, []);
@@ -45,25 +41,6 @@ function Receitinha({route}) {
           
 
         </ScrollView>
-
-        {/* <View style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: 'auto',
-                width: 'auto',
-                backgroundColor: '#e70000',
-                padding: 12,
-                marginBottom: 12,
-                borderTopRightRadius: 32,
-                borderTopLeftRadius: 64,
-                borderBottomRightRadius: 64,
-                borderBottomLeftRadius: 32,
-            }}>
-                <Button onPress={navigateToCookbook} title='COOKBOOK' color='#e70000'></Button>
-                <Ionicons name='pizza' color={"#ffffff"} size={18} />
-            </View> */}
       </View>
     );
   }

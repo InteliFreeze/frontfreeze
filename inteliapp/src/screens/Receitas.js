@@ -53,7 +53,7 @@ function Receitas({navigation: {navigate}}) {
           />
         }>
           {
-          receitas !== undefined ? receitas.map(receita => {console.log(receita); return (<ReceitaBox key={receita._id} nome={receita.nome} naGeladeiraPorcentagem={receita.porcentagemNaGeladeira} emVencimento={receita.itemsEmVencimento} navigate={navigate} _id={receita._id} itemsEmVencimentoNaGeladeira={receita.itemsEmVencimentoNaReceita} itemsFaltantes={receita.itemsFaltantes}></ReceitaBox>)}) : null
+          receitas !== undefined ? receitas.map(receita => {return (<ReceitaBox key={receita._id} nome={receita.nome} naGeladeiraPorcentagem={receita.porcentagemNaGeladeira} emVencimento={receita.itemsEmVencimento} navigate={navigate} _id={receita._id} itemsEmVencimentoNaGeladeira={receita.itemsEmVencimentoNaReceita} itemsFaltantes={receita.itemsFaltantes}></ReceitaBox>)}) : null
           }
 
         </ScrollView>
