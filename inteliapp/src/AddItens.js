@@ -42,10 +42,13 @@ function AddItens({navigation: {navigate}}) {
         alert("Não foi possível adicionar esse ingrediente!");
       })
     }
+
     return (
       <View style={{ flex: 1, paddingTop: 65, paddingRight: 45, paddingLeft:45, backgroundColor: '#000345'}}>
-        <Ionicons onPress={() => navigate('Itens')} name='arrow-back' color={"#ffffff"} size={24} style={{ marginBottom: 24 }} />
-        <Ionicons onPress={() => navigate('Itens')} name='camera' color={"#ffffff"} size={24} style={{ marginBottom: 24 }} />
+        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Ionicons onPress={() => navigate('Itens')} name='arrow-back' color={"#ffffff"} size={24} style={{ marginBottom: 24 }} />
+          <Ionicons onPress={() => navigate('CameraBarCode')} name='camera' color={"#ffffff"} size={24} style={{ marginBottom: 24 }} />
+        </View>
 
         <Text style={{fontSize: 20, color: "#ffffff", fontWeight:'bold' }}>Adicionar ingrediente</Text>
         <Text style={{fontSize: 16, color: "#BDBDBD", paddingTop: 7, paddingBottom:14 }}>Informe os dados.</Text>
