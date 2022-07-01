@@ -16,7 +16,7 @@ export default function CameraBarCode({navigation: {navigate}}) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    navigate('CameraValidade', {codigo: data, navigate: navigate});
   };
 
   if (hasPermission === null) {

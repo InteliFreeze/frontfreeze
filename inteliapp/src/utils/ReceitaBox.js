@@ -11,11 +11,17 @@ import axios from 'axios';
 function ReceitaBox(props) {
 
 
-    const [ porcentagem, setPorcentagem ] = React.useState()
+    const [ porcentagem, setPorcentagem ] = React.useState();
+    const [ nome, setNome ] = React.useState();
     React.useEffect(() => {
         let text = `${props.naGeladeiraPorcentagem}`;
         text = text.split('.')[0]
         setPorcentagem(text);
+        axios.post('https://backfreeze-translate.herokuapp.com/en-to-pt/', {"text": props.nome}).then(res => {
+              setNome(res.data.text_str);
+            }).catch(err => {
+              setNome(props.nome);
+        });
     }, []);
     const onPress = async () => {
         props.navigate('Receitinha', {props});
@@ -37,7 +43,7 @@ function ReceitaBox(props) {
             justifyContent: 'center',
             alignItems: 'center',
         }}>
-            <Text style={{ width: '70%', textAlign: 'center', fontSize: 20, color: "#000345", fontWeight: 'bold' }}>{props.nome}</Text>
+            <Text style={{ width: '70%', textAlign: 'center', fontSize: 20, color: "#000345", fontWeight: 'bold' }}>{nome}</Text>
 
         <View style={{
             display: 'flex',

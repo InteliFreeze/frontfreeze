@@ -7,14 +7,26 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 function Receitinha({route}) {
     const [ingredientes, setIngredientes] = React.useState([]);	
-    const [directions, setDirections ] = React.useState([]);	
+    const [directions, setDirections ] = React.useState([]);
+    const [ modoDePreparoState, setNodoDePreparoState ] = React.useState('');
+
     const [refreshing, setRefreshing] = React.useState(true);
     async function getReceita() {
         await axios.post(`https://backfreeze.herokuapp.com/api/receitas/receita`, {
             id: route.params.props._id
         }).then(res => {
-            setIngredientes(((res.data.data.receita[0].ingredientes_medidas).split(',')));
+            
             setDirections((res.data.data.receita[0].directions).replace(/"/g, '').replace(/\[/g, '').replace(/]/g, ''))
+            axios.post('https://backfreeze-translate.herokuapp.com/en-to-pt/', {"text": directions}).then(res => {
+              setNodoDePreparoState(res.data.text_str);
+            }).catch(err => {
+              setModoDePreparoState(route.params.props.modoDePreparo);
+            });
+            axios.post('https://backfreeze-translate.herokuapp.com/en-to-pt/', {"text": res.data.data.receita[0].ingredientes_medidas}).then(res => {
+              setIngredientes(res.data.text_str.split(','));
+            }).catch(err => {
+              setIngredientes(res.data.data.receita[0].ingredientes_medidas.split(','));
+            });
             setRefreshing(false);
         }).catch(err => {
             alert("Não foi possível carregar a receita!");
@@ -28,6 +40,16 @@ function Receitinha({route}) {
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
       }, []);
+
+    const [ nomeState, setNomeState ] = React.useState('');
+
+    React.useEffect(() => {
+      axios.post('https://backfreeze-translate.herokuapp.com/en-to-pt/', {"text": route.params.props.nome}).then(res => {
+        setNomeState(res.data.text_str);
+      }).catch(err => {
+        setNomeState(route.params.props.nome);
+      });
+    }, []);
   
 
     return (
@@ -41,7 +63,7 @@ function Receitinha({route}) {
           alignSelf: 'center',
           alignItems: 'center',
         }}>
-           <Text style={{marginRight: '3%', textAlign: 'center', fontSize: 20, color: "#ffffff", fontWeight:'bold' }}>{route.params.props.nome}</Text>
+           <Text style={{marginRight: '3%', textAlign: 'center', fontSize: 20, color: "#ffffff", fontWeight:'bold' }}>{nomeState}</Text>
            <AnimatedCircularProgress
                 size={45}
                 width={5}
@@ -80,7 +102,7 @@ function Receitinha({route}) {
 
 
           { 
-            directions !== undefined ? (<Text style={{marginLeft: '3%', fontSize: 16, color: "#BDBDBD", paddingTop: 7, paddingBottom:14 }}>{directions}</Text>) : null
+            directions !== undefined ? (<Text style={{marginLeft: '3%', fontSize: 16, color: "#BDBDBD", paddingTop: 7, paddingBottom:14 }}>{modoDePreparoState}</Text>) : null
           }
 
         <Text style={{marginBottom: 24, marginTop: 24, textAlign: 'left', fontSize: 18, color: "#ffffff", fontWeight:'bold' }}>♥   Itens aproveitados:</Text>
