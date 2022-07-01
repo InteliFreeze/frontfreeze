@@ -8,7 +8,7 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 function Receitinha({route}) {
     const [ingredientes, setIngredientes] = React.useState([]);	
     const [directions, setDirections ] = React.useState([]);
-    const [ modoDePreparoState, setNodoDePreparoState ] = React.useState('');
+    const [ modoDePreparoState, setModoDePreparoState ] = React.useState('');
 
     const [refreshing, setRefreshing] = React.useState(true);
     async function getReceita() {
@@ -18,7 +18,7 @@ function Receitinha({route}) {
             
             setDirections((res.data.data.receita[0].directions).replace(/"/g, '').replace(/\[/g, '').replace(/]/g, ''))
             axios.post('https://backfreeze-translate.herokuapp.com/en-to-pt/', {"text": directions}).then(res => {
-              setNodoDePreparoState(res.data.text_str);
+              setModoDePreparoState(res.data.text_str);
             }).catch(err => {
               setModoDePreparoState(route.params.props.modoDePreparo);
             });
