@@ -11,14 +11,12 @@ function Itens({navigation: {navigate}}) {
   const [itens, setItens] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(true);
   async function getItens () {
-    const t = await AsyncStorage.getItem('token');
-    console.log(`https://backfreeze.herokuapp.com/api/users/${t}/`)
+    const t = await AsyncStorage.getItem('token');//backfreeze.herokuapp.com/api/users/${t}/`)
     await axios.get(`https://backfreeze.herokuapp.com/api/users/${t}/`).then(res => {
       setItens(res.data.data.User[0].items)
       setRefreshing(false);
     })
     .catch(err => {
-      console.log(err)
     })
   }
 

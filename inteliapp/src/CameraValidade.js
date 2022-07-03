@@ -2,36 +2,40 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, Button } from 'react-native';
 import { Camera, CameraType, CameraCapturedPicture } from 'expo-camera';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import * as ImagePicker from 'expo-image-picker';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
+import axios from 'axios';
 
 export default function Validade({route}) {
-    const [hasPermission, setHasPermission] = useState(null);
-    const [type, setType] = useState(CameraType.back);
-  
-    useEffect(() => {
-      (async () => {
-        const { status } = await Camera.requestCameraPermissionsAsync();
-        setHasPermission(status === 'granted');
-      })();
-    }, []);
-  
-    if (hasPermission === null) {
-      return <View />;
-    }
-    if (hasPermission === false) {
-      return <Text>No access to camera</Text>;
-    }
+  const takePhoto = async () => {
+    const img = await ImagePicker.launchCameraAsync({
+      quality: 0.7,
+      allowsEditing: false,
+      aspect: [16, 9],
+      allowsEditing: true,
+    });
+    const manipResult = await manipulateAsync(img.uri, [], {base64: true, format: SaveFormat.PNG});
+    
+    await axios.post('https://backfreeze-ocr.herokuapp.com/img_to_str/', {"base64_img": manipResult.base64}).then(req, res => {
+      console.log(res);   
+  }).catch(err => {
+    console.log(err)
+        alert("Erro ao tentar enviar a imagem!");
+      });
+  };
 
+  React.useEffect(() => {
+
+    takePhoto();
+  }, []);
   return (
     <View style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '100%', width: '100%', backgroundColor: '#000345'}}>
       <View style={{ marginTop: 64, width: '80%' }}>
         <Ionicons style={{width: 24, height:24}} onPress={() => route.params.navigate('AddItens')} name='arrow-back' color={"#ffffff"} size={24} />
         <Text style={{ marginTop: 32, color: '#ffffff', fontSize: 24, textAlign: 'center', fontWeight: 'bold'}}>Agora é a vez da validade: </Text>
       </View>
-      <Camera onTouchEndCapture={Camera.takePictureAsync} style={{height: '100%', width: '100%', display: 'flex'}} type={type}>
-        <View style={{height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{color: '#ffffff'}}>Pressione para escanear</Text>
-        </View>
-      </Camera>
+      <View style={{ flex: 1, height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+      </View>
     </View>
   );
 }

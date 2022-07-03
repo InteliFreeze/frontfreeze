@@ -146,7 +146,7 @@ function ItemBox(props) {
                 justifyContent: 'space-evenly',
                 alignItems: 'center'
             }}>
-                <TextInput onChangeText={(input) => {setCodigo(input)}} onBlur={() => updateCodigo()} style={{ fontSize: 20, color: "#494B7A", fontWeight: 'bold' }}>{props.codigo}</TextInput>
+                <TextInput onChangeText={(input) => {setCodigo(input)}} onBlur={() => updateCodigo()} style={{ height: 'auto', fontSize: 20, color: "#494B7A", fontWeight: 'bold'}}>{props.codigo}</TextInput>
                 <Ionicons onPress={() => {deleteItem(props._id)}} name='close' color={"#494B7A"} size={24} />
 
             </View>
