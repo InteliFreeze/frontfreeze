@@ -15,25 +15,21 @@ function AddItens({navigation: {navigate}}) {
         AsyncStorage.getItem('token').then(res => {
             setToken(res)
         }).catch(err => {
-            console.log(err)
         })
     }, [])
     const [nome, setNome ] = React.useState('');
     const nomeChange = (nm) => {
         setNome(nm);
-        console.log(nome);
     }
 
     const [codigo, setCodigo ] = React.useState('');
     const codigoChange = (nm) => {
         setCodigo(nm);
-        console.log(codigo);
     }
 
     const [validade, setValidade ] = React.useState('');
     const validadeChange = (nm) => {
       setValidade(nm);
-      console.log(validade)
     }
     async function sendRequest() {
       setNome('');
