@@ -8,6 +8,8 @@ import axios from 'axios';
 
 function ItemBox(props) {
     const [opacity, setOpacity] = React.useState(1);
+    const [opacity2, setOpacity2] = React.useState(1);
+
     const [rerender, setRerender] = React.useState('flex');
     function deleteItem (id) {
         axios.delete(`https://backfreeze.herokuapp.com/api/users/usertoken/${id}`).then(res => {
@@ -193,8 +195,14 @@ function ItemBox(props) {
                 borderTopLeftRadius: 64,
                 borderBottomRightRadius: 64,
                 borderBottomLeftRadius: 32,
-            }}>
-                <Button onPress={onPress} title='Fabricante' color='#000345'></Button>
+                alignItems: 'center',
+                justifyContent: 'center',
+                opacity: opacity2
+            }}
+            onTouchStart={() => {setOpacity2(0.9); setTimeout(() => {setOpacity2(1)}, 200)}}
+            onTouchEndCapture={onPress}
+            >
+                <Text style={{color: '#fff', fontSize: 16, fontWeight: 'bold', padding: 6}}>Fabricante</Text>
                 <Ionicons name='link' color={"#ffffff"} size={18} />
             </View>
             

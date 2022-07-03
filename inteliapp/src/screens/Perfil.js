@@ -1,9 +1,11 @@
+import React from 'react';
 import { Text, View, Button } from 'react-native';
 
 import CustomizedTokenField from '../utils/CustomizedTokenField';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Perfil({ navigation: { navigate } }) {
+    const [opacity, setOpacity] = React.useState(1);
     async function deleteToken () {
         await AsyncStorage.setItem('token', '');
         navigate('Login');
@@ -24,8 +26,14 @@ function Perfil({ navigation: { navigate } }) {
           borderTopLeftRadius: 64,
           borderBottomRightRadius: 64,
           borderBottomLeftRadius: 32,
-        }}>
-            <Button onPress={deleteToken} title='Sair' color='#C10000'></Button>
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: opacity
+        }}
+        onTouchStart={() => {setOpacity(0.9); setTimeout(() => {setOpacity(1)}, 200)}}
+        onTouchEndCapture={deleteToken}
+        >
+            <Text style={{color: '#fff', fontSize: 20, fontWeight: 'bold'}}>Sair</Text>
         </View>
 
       </View>

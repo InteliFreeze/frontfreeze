@@ -6,6 +6,7 @@ import { Text, View, TextInput, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginPage({ navigation: { navigate } }) {
+    const [opacity, setOpacity] = React.useState(1);
     const verifyToken = async () => {    
         const tokenVerify = await AsyncStorage.getItem('token');
         if (tokenVerify !== null || tokenVerify !== '') {
@@ -68,8 +69,13 @@ export default function LoginPage({ navigation: { navigate } }) {
                    borderTopLeftRadius: 64,
                    borderBottomRightRadius: 64,
                    borderBottomLeftRadius: 32,
-                }}>
-                    <Button onPress={changePage} title='Entrar' color='#00C113'></Button>
+                   alignItems: 'center',
+                   justifyContent: 'center',
+                   opacity: opacity
+                }}
+                onTouchStart={() => {setOpacity(0.9); setTimeout(() => {setOpacity(1)}, 200)}}
+                onTouchEndCapture={changePage}>
+                   <Text style={{color: '#fff', fontSize: 20, fontWeight: 'bold'}}>Entrar</Text>
                 </View>
         
            </View>

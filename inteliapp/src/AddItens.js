@@ -8,6 +8,8 @@ import CalendarPicker from 'react-native-calendar-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function AddItens({navigation: {navigate}}) {
+  const [opacity, setOpacity] = React.useState(1);
+
     const [token, setToken ] = React.useState('');
     React.useEffect(() => {
         AsyncStorage.getItem('token').then(res => {
@@ -113,11 +115,15 @@ function AddItens({navigation: {navigate}}) {
             borderTopLeftRadius: 64,
             borderBottomRightRadius: 64,
             borderBottomLeftRadius: 32,
-        }}>
-            <Button 
-            onPress={sendRequest}
-            title='Adicionar'
-            color='#00C113'></Button>
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: opacity
+        }}
+        onTouchStart={() => {setOpacity(0.9); setTimeout(() => {setOpacity(1)}, 200)}}
+        onTouchEndCapture={sendRequest}
+        >
+          <Text style={{color: '#fff', fontSize: 20, fontWeight: 'bold'}}>Adicionar</Text>
+
         </View>
         </ScrollView>
         

@@ -10,6 +10,7 @@ import axios from 'axios';
 
 function ReceitaBox(props) {
     const [opacity, setOpacity] = React.useState(1);
+    const [opacity2, setOpacity2] = React.useState(1);
 
     const [ porcentagem, setPorcentagem ] = React.useState();
     const [ nome, setNome ] = React.useState();
@@ -103,8 +104,14 @@ function ReceitaBox(props) {
                 borderTopLeftRadius: 64,
                 borderBottomRightRadius: 64,
                 borderBottomLeftRadius: 32,
-            }}>
-                <Button onPress={onPress} title='RECEITA' color='#000345'></Button>
+                alignItems: 'center',
+                justifyContent: 'center',
+                opacity: opacity2
+            }}
+            onTouchStart={() => {setOpacity2(0.9); setTimeout(() => {setOpacity2(1)}, 200)}}
+            onTouchEndCapture={onPress}
+            >
+                <Text style={{color: '#fff', fontSize: 16, fontWeight: 'bold', padding: 6}}>Receita</Text>
                 <Ionicons name='nutrition' color={"#ffffff"} size={18} />
             </View>
             
