@@ -9,7 +9,7 @@ import { format } from 'date-fns';
 import axios from 'axios';
 
 function ReceitaBox(props) {
-
+    const [opacity, setOpacity] = React.useState(1);
 
     const [ porcentagem, setPorcentagem ] = React.useState();
     const [ nome, setNome ] = React.useState();
@@ -42,7 +42,10 @@ function ReceitaBox(props) {
             paddingTop: 12,
             justifyContent: 'center',
             alignItems: 'center',
-        }}>
+            opacity: opacity
+        }}
+        onTouchStart={() => {setOpacity(0.9), setTimeout(() => {setOpacity(1)}, 200)}}
+        >
             <Text style={{ width: '70%', textAlign: 'center', fontSize: 20, color: "#000345", fontWeight: 'bold' }}>{nome}</Text>
 
         <View style={{

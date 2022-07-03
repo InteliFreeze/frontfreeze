@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import axios from 'axios';
 
 function ItemBox(props) {
+    const [opacity, setOpacity] = React.useState(1);
     const [rerender, setRerender] = React.useState('flex');
     function deleteItem (id) {
         axios.delete(`https://backfreeze.herokuapp.com/api/users/usertoken/${id}`).then(res => {
@@ -135,8 +136,11 @@ function ItemBox(props) {
             paddingTop: 12,
             justifyContent: 'center',
             alignItems: 'center',
-            display: rerender
-        }}>
+            display: rerender,
+            opacity: opacity
+        }}
+        onTouchStart={() => {setOpacity(0.9), setTimeout(() => {setOpacity(1)}, 200)}}
+        >
             <View 
             style={{
                 height: 60,
@@ -146,7 +150,7 @@ function ItemBox(props) {
                 justifyContent: 'space-evenly',
                 alignItems: 'center'
             }}>
-                <TextInput onChangeText={(input) => {setCodigo(input)}} onBlur={() => updateCodigo()} style={{ height: 'auto', fontSize: 20, color: "#494B7A", fontWeight: 'bold'}}>{props.codigo}</TextInput>
+                <TextInput onChangeText={(input) => {setCodigo(input)}} onBlur={() => updateCodigo()} style={{ height: 'auto', fontSize: 20, color: "#494B7A", fontWeight: 'bold', textAlign: 'center', backgroundColor: '#fff', paddingLeft: 6, paddingRight: 6, borderRadius: 10}}>{props.codigo}</TextInput>
                 <Ionicons onPress={() => {deleteItem(props._id)}} name='close' color={"#494B7A"} size={24} />
 
             </View>
@@ -161,7 +165,7 @@ function ItemBox(props) {
                 paddingLeft: 24
             }}>
                 <Text style={{ fontSize: 20, color: "#000345", fontWeight: 'bold' }}>Nome:</Text>
-                <TextInput onChangeText={(input) => {setNome(input)}} onBlur={() => updateNome()} style={{ fontSize: 16, color: "#282B65", fontWeight: 'bold', paddingLeft: 12, paddingRight: 84 }}>{props.nome}</TextInput>
+                <TextInput onChangeText={(input) => {setNome(input)}} onBlur={() => updateNome()} style={{ marginLeft: 3, fontSize: 16, color: "#282B65", fontWeight: 'bold', paddingLeft: 6, paddingRight: 6, backgroundColor: '#ffff', textAlign: 'center', borderRadius: 10 }}>{props.nome}</TextInput>
             </View>
             <View
             style={{
@@ -174,7 +178,7 @@ function ItemBox(props) {
                 paddingLeft: 24
             }}>
                 <Text style={{ fontSize: 20, color: "#000345", fontWeight: 'bold' }}>Validade:</Text>
-                <TextInput onChangeText={(input) => {setValidade(input)}} onBlur={() => updateValidade()} style={{ fontSize: 16, color: "#282B65", fontWeight: 'bold', paddingLeft: 12, paddingRight: 64 }}>{format(new Date(props.validade), 'dd/MM/yyyy')}</TextInput>
+                <TextInput onChangeText={(input) => {setValidade(input)}} onBlur={() => updateValidade()} style={{ fontSize: 16, color: "#282B65", fontWeight: 'bold', paddingLeft: 6, paddingRight: 6, textAlign: 'center', marginTop: 3, backgroundColor: '#fff', borderRadius: 10 }}>{format(new Date(props.validade), 'dd/MM/yyyy')}</TextInput>
             </View>
             <View style={{
                 display: 'flex',
