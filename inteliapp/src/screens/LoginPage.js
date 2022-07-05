@@ -39,7 +39,7 @@ export default function LoginPage({ navigation: { navigate } }) {
 
     React.useEffect(() => {
         verifyToken();
-    }, [])
+        }, []);
     return (
         <View style={{ flex: 1, paddingTop: '50%', alignItems: 'center'}}>
            <Text style={{fontSize: 32, color: "#ffffff", fontWeight:'bold' }}>Seja bem-vindo!</Text>
