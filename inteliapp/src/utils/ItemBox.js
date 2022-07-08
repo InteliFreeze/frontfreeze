@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, View, Linking, Button, TextInput } from 'react-native';
+import { Text, View, Linking, Button, TextInput, Alert } from 'react-native';
 import { format } from 'date-fns';
 import axios from 'axios';
 
@@ -11,12 +11,22 @@ function ItemBox(props) {
     const [opacity2, setOpacity2] = React.useState(1);
 
     const [rerender, setRerender] = React.useState('flex');
-    function deleteItem (id) {
-        axios.delete(`https://backfreeze.herokuapp.com/api/users/usertoken/${id}`).then(res => {
-            setRerender('none')
-        }).catch(err => {
-            alert('Não foi possível deletar o item!')
-        })
+    async function deleteItem (codigo) {
+        const itensStorage = await AsyncStorage.getItem('itens');
+        let itensArray = JSON.parse(itensStorage);
+        let itensArrayDeleted = itensArray.filter(item => item.codigo !== codigo);
+        await AsyncStorage.setItem('itens', JSON.stringify(itensArrayDeleted)).then(async () => {
+            Alert.alert('Item deletado!');
+            setRerender('none') 
+
+            await axios.delete(`https://backfreeze.herokuapp.com/api/users/usertoken/${codigo}`).then(res => {
+                Alert.alert('Sincronizado!');
+
+            }).catch(err => {
+                Alert.alert('Você não está conectado!');
+            })
+        });
+        
     }
 
     const onPress = async () => {
@@ -27,63 +37,61 @@ function ItemBox(props) {
 
     const [nome, setNome] = React.useState(props.nome);
 
-    async function updateNome (name) {
+    async function updateNome (name, codigo) {
         const t = await AsyncStorage.getItem('token');
-        setNome(name);
-        let itens = [];
-        await axios.get(`https://backfreeze.herokuapp.com/api/users/${t}/`).then(res => {
-          itens = JSON.parse(JSON.stringify(res.data.data.User[0].items));
-        })
-        .catch(err => {
-          alert('Erro ao atualizar nome!');
-        })
-
-        itens.map(item => {
-            if (item._id === props._id) {
+        
+        const itensLocal = await AsyncStorage.getItem('itens');
+        let itens = JSON.parse(itensLocal);
+        itens.filter(item => {
+            if (item.nome == props.nome) {
                 item.nome = nome;
             }
-        })
+        });
 
-        await axios.patch(`https://backfreeze.herokuapp.com/api/users/${t}/`, {
-            items: itens
-        }, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => {
+        await AsyncStorage.setItem('itens', JSON.stringify(itens)).then(async () => {
+            await axios.patch(`https://backfreeze.herokuapp.com/api/users/${t}/`, {
+                items: itens
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+              }
+            }).then(res => {
+              Alert.alert('Sincronizado!');
+            }).catch(err => {
+              Alert.alert('Você está offline!');
+            })
         }).catch(err => {
-            alert('Erro ao atualizar nome!');
+            Alert.alert("Erro ao atualizar o nome!");
         })
     }
     
     const [codigo, setCodigo] = React.useState(props.codigo);
 
-    async function updateCodigo (name) {
+    async function updateCodigo () {
         const t = await AsyncStorage.getItem('token');
-        setCodigo(name);
-        let itens = [];
-        await axios.get(`https://backfreeze.herokuapp.com/api/users/${t}/`).then(res => {
-          itens = JSON.parse(JSON.stringify(res.data.data.User[0].items));
-        })
-        .catch(err => {
-          alert('Erro ao atualizar codigo!');
-        })
-
-        itens.map(item => {
-            if (item._id === props._id) {
+        
+        const itensLocal = await AsyncStorage.getItem('itens');
+        let itens = JSON.parse(itensLocal);
+        itens.filter(item => {
+            if (item.codigo == props.codigo) {
                 item.codigo = codigo;
             }
-        })
+        });
 
-        await axios.patch(`https://backfreeze.herokuapp.com/api/users/${t}/`, {
-            items: itens
-        }, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => {
+        await AsyncStorage.setItem('itens', JSON.stringify(itens)).then(async () => {
+            await axios.patch(`https://backfreeze.herokuapp.com/api/users/${t}/`, {
+                items: itens
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+              }
+            }).then(res => {
+              Alert.alert('Sincronizado!');
+            }).catch(err => {
+              Alert.alert('Você está offline!');
+            })
         }).catch(err => {
-            alert('Erro ao atualizar codigo de barras!');
+            Alert.alert("Erro ao atualizar o codigo de barras!");
         })
     }
     
@@ -91,33 +99,31 @@ function ItemBox(props) {
 
     async function updateValidade (name) {
         const t = await AsyncStorage.getItem('token');
-        setValidade(name);
-        let itens = [];
-        await axios.get(`https://backfreeze.herokuapp.com/api/users/${t}/`).then(res => {
-          itens = JSON.parse(JSON.stringify(res.data.data.User[0].items));
-        })
-        .catch(err => {
-          alert('Erro ao atualizar validade!');
-        })
-
-        itens.map(item => {
-            if (item._id === props._id) {
-                const data = validade.split('/');
-                item.validade = new Date(data[2], data[1] - 1, data[0]);
+        
+        const itensLocal = await AsyncStorage.getItem('itens');
+        let itens = JSON.parse(itensLocal);
+        itens.filter(item => {
+            if (item.validade == props.validade) {
+                let diaMesAno = validade.split('/');
+                let validadeParaRequest = (diaMesAno[2] + '-' + diaMesAno[1] + '-' + diaMesAno[0] + 'T15:00:00.000Z');
+                item.validade = validadeParaRequest;
             }
-        })
+        });
 
-        await axios.patch(`https://backfreeze.herokuapp.com/api/users/${t}/`, {
-            items: itens
-        }, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => {
-            
+        await AsyncStorage.setItem('itens', JSON.stringify(itens)).then(async () => {
+            await axios.patch(`https://backfreeze.herokuapp.com/api/users/${t}/`, {
+                items: itens
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+              }
+            }).then(res => {
+              Alert.alert('Sincronizado!');
+            }).catch(err => {
+              Alert.alert('Você está offline!');
+            })
         }).catch(err => {
-            alert('Erro ao atualizar validade!');
-            
+            Alert.alert("Erro ao atualizar a validade!");
         })
     }
 
@@ -153,7 +159,7 @@ function ItemBox(props) {
                 alignItems: 'center'
             }}>
                 <TextInput onChangeText={(input) => {setCodigo(input)}} onBlur={() => updateCodigo()} style={{ height: 'auto', fontSize: 20, color: "#494B7A", fontWeight: 'bold', textAlign: 'center', backgroundColor: '#fff', paddingLeft: 6, paddingRight: 6, borderRadius: 10}}>{props.codigo}</TextInput>
-                <Ionicons onPress={() => {deleteItem(props._id)}} name='close' color={"#494B7A"} size={24} />
+                <Ionicons onPress={() => {deleteItem(props.codigo)}} name='close' color={"#494B7A"} size={24} />
 
             </View>
             <View
@@ -180,7 +186,7 @@ function ItemBox(props) {
                 paddingLeft: 24
             }}>
                 <Text style={{ fontSize: 20, color: "#000345", fontWeight: 'bold' }}>Validade:</Text>
-                <TextInput onChangeText={(input) => {setValidade(input)}} onBlur={() => updateValidade()} style={{ fontSize: 16, color: "#282B65", fontWeight: 'bold', paddingLeft: 6, paddingRight: 6, textAlign: 'center', marginTop: 3, backgroundColor: '#fff', borderRadius: 10 }}>{format(new Date(props.validade), 'dd/MM/yyyy')}</TextInput>
+                <TextInput onChangeText={(input) => {setValidade(input)}} onBlur={() => updateValidade()} style={{ fontSize: 16, color: "#282B65", fontWeight: 'bold', paddingLeft: 6, paddingRight: 6, textAlign: 'center', marginTop: 3, backgroundColor: '#fff', borderRadius: 10 }}>{props.validade == null ? "Sem data de validade" : format(new Date(props.validade), 'dd/MM/yyyy')}</TextInput>
             </View>
             <View style={{
                 display: 'flex',

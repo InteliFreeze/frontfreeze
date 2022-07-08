@@ -1,28 +1,30 @@
 import * as React from 'react';
 
 import axios from 'axios'
-import { TextInput, Text, View, ScrollView, Button } from 'react-native';
+import { TextInput, Text, View, ScrollView, Button, Alert } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CalendarPicker from 'react-native-calendar-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-function AddItens({navigation: {navigate}}) {
-  const [opacity, setOpacity] = React.useState(1);
+export default function AddItens({navigation: {navigate}}) {
+
+    
+    const [opacity, setOpacity] = React.useState(1);
 
     const [token, setToken ] = React.useState('');
     React.useEffect(() => {
         AsyncStorage.getItem('token').then(res => {
             setToken(res)
         }).catch(err => {
-        })
+        });
     }, [])
     const [nome, setNome ] = React.useState('');
     const nomeChange = (nm) => {
         setNome(nm);
     }
 
-    const [codigo, setCodigo ] = React.useState('');
+    const [codigo, setCodigo ] = React.useState(Date.now());
     const codigoChange = (nm) => {
         setCodigo(nm);
     }
@@ -40,6 +42,39 @@ function AddItens({navigation: {navigate}}) {
         alert("Não foi possível adicionar esse ingrediente!");
       })
     }
+
+    async function sendRequestLocal() {
+      if (codigo === '' || codigo === undefined || codigo === null || codigo === ' ' || codigo == 0) {
+        setCodigo(Date.now());
+      }
+
+      let receita = JSON.stringify([{nome: nome, codigo: codigo, validade: validade}]);
+      let vaiParaOStorage;
+      let itensStorage = await AsyncStorage.getItem('itens');
+      
+      receita = receita.replace(']', '').replace('[', '');
+      if (itensStorage !== null && itensStorage !== undefined && itensStorage !== '' && itensStorage !== '[]') {
+
+        itensStorage = itensStorage.replace(']', '').replace('[', '');
+        vaiParaOStorage = `[${receita},${itensStorage}]`;
+
+      } else {
+        itensStorage = ''
+        vaiParaOStorage = `[${receita}]`;
+
+      }
+
+      await AsyncStorage.setItem('itens', vaiParaOStorage).then(async () => {
+        Alert.alert("Adicionado com sucesso!");
+        await axios.patch(`https://backfreeze.herokuapp.com/api/users/${token}/`, {items: JSON.parse(vaiParaOStorage)})
+        .then(async res => {
+          Alert.alert("Sincronizado com sucesso!");})
+        })
+        .catch(err => {
+          Alert.alert("Você está offline, mas o item foi salvo localmente!");
+        });
+    }
+
 
     return (
       <View style={{ flex: 1, paddingTop: 65, paddingRight: 45, paddingLeft:45, backgroundColor: '#000345'}}>
@@ -68,7 +103,8 @@ function AddItens({navigation: {navigate}}) {
             borderTopLeftRadius: 64,
             borderBottomRightRadius: 64,
             borderBottomLeftRadius: 32,
-        }}></TextInput>
+        }}
+        ></TextInput>
         <Text style={{marginTop: 32, fontSize: 18, color: "#ffffff", fontWeight:'bold', marginBottom: 12 }}>Validade:</Text>
         <CalendarPicker
         weekdays={['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']}
@@ -116,7 +152,7 @@ function AddItens({navigation: {navigate}}) {
             opacity: opacity
         }}
         onTouchStart={() => {setOpacity(0.9); setTimeout(() => {setOpacity(1)}, 200)}}
-        onTouchEndCapture={sendRequest}
+        onTouchEndCapture={sendRequestLocal}
         >
           <Text style={{color: '#fff', fontSize: 20, fontWeight: 'bold'}}>Adicionar</Text>
 
@@ -126,5 +162,3 @@ function AddItens({navigation: {navigate}}) {
       </View>
     );
   }
-
-export default AddItens;
